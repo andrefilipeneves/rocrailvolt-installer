@@ -1,0 +1,27 @@
+{% extends "layouts/base.html" %}
+{% block title %}ROI Editor{% endblock %}
+
+{% block content %}
+<h1>ROI Editor</h1>
+
+<div class="card">
+    <h2>Selecionar áreas no vídeo</h2>
+    <img id="roiImg" src="/yolo-stream" style="width:100%; border-radius:10px;">
+</div>
+
+<div class="card">
+    <button onclick="saveROIs()">Guardar ROIs</button>
+</div>
+
+<script>
+async function saveROIs() {
+    const res = await fetch("/api/roi", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ rois: window.currentROIs || [] })
+    });
+    alert("ROI guardado!");
+}
+</script>
+
+{% endblock %}
