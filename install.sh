@@ -2,8 +2,8 @@
 set -e
 
 echo "=============================================="
-echo "     RocrailVolt Installer (YOLO ON)"
-echo "     Author: andrefilipeneves"
+echo "   RocrailVolt Installer (YOLO ON) - Pi5"
+echo "   Author: andrefilipeneves"
 echo "=============================================="
 
 USER_HOME="/home/andrefilipeneves"
@@ -15,14 +15,15 @@ echo "[1/20] Updating system..."
 sudo apt update -y
 sudo apt upgrade -y
 
-echo "[2/20] Installing system dependencies..."
-sudo apt install -y python3 python3-venv python3-pip git curl unzip \
-                    libatlas-base-dev libopenblas-dev liblapack-dev \
-                    libavcodec-dev libavformat-dev libswscale-dev \
-                    libqt4-test libgtk-3-dev
+echo "[2/20] Installing dependencies (Debian 12/13 compatible)..."
+sudo apt install -y \
+    python3 python3-venv python3-pip git curl unzip wget \
+    libopenblas-dev liblapack-dev \
+    libavcodec-dev libavformat-dev libswscale-dev \
+    libgtk-3-dev libqt5gui5 libqt5widgets5 libqt5core5a
 
 echo "[3/20] Installing OpenCV (Python)..."
-pip3 install opencv-python==4.7.0.72
+pip3 install opencv-python==4.8.1.78
 
 echo "[4/20] Installing Ultralytics YOLO..."
 pip3 install ultralytics
@@ -66,7 +67,6 @@ EOF
 
 echo "[9/20] Creating apps/__init__.py..."
 cat > "$PROJECT_DIR/apps/__init__.py" << 'EOF'
-import threading
 from flask import Flask
 
 def create_app():
@@ -89,6 +89,7 @@ blueprint = Blueprint(
     template_folder='../../templates',
     static_folder='../../static'
 )
+
 from apps.home import routes
 EOF
 
@@ -100,11 +101,7 @@ from flask import render_template, Response, jsonify, request
 from apps.home import blueprint
 from apps.yolo_core import yolo_camera
 from apps.rocrail_plan import parse_plan
-from apps import rocrail_live
 from apps import roi_store
-from apps import rocrail_control
-
-rocrail_live.ensure_started()
 
 @blueprint.route("/")
 def index():
@@ -131,7 +128,6 @@ def api_roi_save():
     rois = data.get("rois", [])
     roi_store.save_rois(rois)
     return jsonify({"ok": True})
-
 EOF
 
 echo "[12/20] Creating apps/yolo_core.py..."
@@ -209,7 +205,7 @@ def parse_plan():
     return {"blocks": blocks, "locos": locos}
 EOF
 
-echo "[15/20] Creating templates/home/ai_dashboard.html..."
+echo "[15/20] Creating templates..."
 cat > "$PROJECT_DIR/templates/home/ai_dashboard.html" << 'EOF'
 <h1 style="color:white">AI Dashboard</h1>
 <img src="/yolo-stream" style="width:100%">
