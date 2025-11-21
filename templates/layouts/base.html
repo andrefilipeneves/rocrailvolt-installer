@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}RocrailVolt{% endblock %}</title>
+
+    <link rel="stylesheet" href="/static/css/volt.css">
+
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+
+    {% include "partials/_navbar.html" %}
+    {% include "partials/_sidebar.html" %}
+
+    <main class="content">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include "partials/_footer.html" %}
+
+    {% block scripts %}{% endblock %}
+
+</body>
+</html>
