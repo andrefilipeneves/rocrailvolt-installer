@@ -1,0 +1,14 @@
+{% extends "layouts/base.html" %}
+{% block title %}Locomotivas{% endblock %}
+
+{% block content %}
+<h1>Locomotivas</h1>
+
+<div class="card">
+    <ul>
+        {% for loco in locos %}
+        <li>{{ loco.id }} — end: {{ loco.addr }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
