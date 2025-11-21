@@ -1,0 +1,31 @@
+{% extends "layouts/base.html" %}
+{% block title %}Track Layout{% endblock %}
+
+{% block content %}
+<h1>Track Layout</h1>
+
+<div class="card">
+    <canvas id="layoutCanvas" width="1000" height="600"
+        style="background:#000; border-radius:10px;"></canvas>
+</div>
+
+{% block scripts %}
+<script>
+async function drawLayout() {
+    const res = await fetch("/api/layout-state");
+    const data = await res.json();
+
+    let ctx = document.getElementById("layoutCanvas").getContext("2d");
+    ctx.fillStyle = "#000";
+    ctx.fillRect(0,0,1000,600);
+
+    data.blocks.forEach(b => {
+        ctx.fillStyle = b.state === "occupied" ? "red" : "green";
+        ctx.fillRect(b.x || 20, b.y || 20, 15, 15);
+    });
+}
+
+setInterval(drawLayout, 300);
+</script>
+{% endblock %}
+{% endblock %}
