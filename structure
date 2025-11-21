@@ -1,0 +1,19 @@
+RocrailVolt/
+ ├── templates/
+ │    ├── layouts/
+ │    │     └── base.html
+ │    ├── partials/
+ │    │     ├── _navbar.html
+ │    │     ├── _sidebar.html
+ │    │     └── _footer.html
+ │    └── home/
+ │          ├── ai_dashboard.html
+ │          ├── layout_map.html
+ │          ├── roi_editor.html
+ │          ├── fleet.html
+ │          └── rc_dashboard.html
+ └── static/
+      ├── css/
+      │     └── volt.css
+      ├── js/
+      └── img/
