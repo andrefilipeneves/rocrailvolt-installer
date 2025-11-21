@@ -1,0 +1,23 @@
+{% extends "layouts/base.html" %}
+{% block title %}RC Dashboard{% endblock %}
+
+{% block content %}
+<h1>RC Dashboard</h1>
+
+<div class="card">
+    <label>Velocidade</label>
+    <input type="range" min="-100" max="100" oninput="setThrottle(this.value)">
+
+    <label>Direção</label>
+    <input type="range" min="-100" max="100" oninput="setSteering(this.value)">
+
+    <button onclick="stop()">STOP</button>
+</div>
+
+<script>
+function setThrottle(v){ fetch("/api/rc-car/set-throttle",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({vehicle_id:"CAR1",throttle:v})}); }
+function setSteering(v){ fetch("/api/rc-car/set-steering",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({vehicle_id:"CAR1",steering:v})}); }
+function stop(){ fetch("/api/rc-car/stop",{method:"POST"}); }
+</script>
+
+{% endblock %}
