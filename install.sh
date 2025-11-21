@@ -2,7 +2,7 @@
 set -e
 
 echo "=============================================="
-echo "   RocrailVolt Installer (YOLO ON) - Pi5"
+echo "   RocrailVolt Installer (YOLO ON) - Pi 5"
 echo "   Author: andrefilipeneves"
 echo "=============================================="
 
@@ -15,20 +15,15 @@ echo "[1/20] Updating system..."
 sudo apt update -y
 sudo apt upgrade -y
 
-echo "[2/20] Installing dependencies (Debian 12/13 compatible)..."
+echo "[2/20] Installing system dependencies (Debian 12/13 compatible)..."
 sudo apt install -y \
     python3 python3-venv python3-pip git curl unzip wget \
     libopenblas-dev liblapack-dev \
     libavcodec-dev libavformat-dev libswscale-dev \
-    libgtk-3-dev libqt5gui5 libqt5widgets5 libqt5core5a
+    libgtk-3-dev libqt5gui5 libqt5widgets5 libqt5core5a \
+    python3-opencv
 
-echo "[3/20] Installing OpenCV (Python)..."
-pip3 install opencv-python==4.8.1.78
-
-echo "[4/20] Installing Ultralytics YOLO..."
-pip3 install ultralytics
-
-echo "[5/20] Creating project directory..."
+echo "[3/20] Creating project directory..."
 rm -rf "$PROJECT_DIR"
 mkdir -p "$PROJECT_DIR"
 mkdir -p "$PROJECT_DIR/apps"
@@ -40,19 +35,22 @@ mkdir -p "$PROJECT_DIR/static/js"
 mkdir -p "$PROJECT_DIR/static/img"
 mkdir -p "$PROJECT_DIR/data"
 
-echo "[6/20] Creating virtual environment..."
+echo "[4/20] Creating virtual environment..."
 python3 -m venv "$PROJECT_DIR/venv"
+
+echo "[5/20] Activating virtual environment..."
 source "$PROJECT_DIR/venv/bin/activate"
 
-echo "[7/20] Creating requirements.txt..."
+echo "[6/20] Creating requirements.txt..."
 cat > "$PROJECT_DIR/requirements.txt" << 'EOF'
 flask
 flask-cors
 requests
 ultralytics
-opencv-python
 EOF
 
+echo "[7/20] Installing pip requirements..."
+pip install --upgrade pip
 pip install -r "$PROJECT_DIR/requirements.txt"
 
 echo "[8/20] Creating run.py..."
@@ -205,10 +203,10 @@ def parse_plan():
     return {"blocks": blocks, "locos": locos}
 EOF
 
-echo "[15/20] Creating templates..."
+echo "[15/20] Creating template..."
 cat > "$PROJECT_DIR/templates/home/ai_dashboard.html" << 'EOF'
-<h1 style="color:white">AI Dashboard</h1>
-<img src="/yolo-stream" style="width:100%">
+<h1 style="color:white;">AI Dashboard</h1>
+<img src="/yolo-stream" style="width:100%; border-radius:10px;">
 EOF
 
 echo "[16/20] Creating start.sh..."
@@ -229,7 +227,7 @@ EOF
 
 chmod +x "$PROJECT_DIR/stop.sh"
 
-echo "[18/20] Installing Rocrail..."
+echo "[18/20] Downloading Rocrail..."
 cd /tmp
 wget https://wiki.rocrail.net/rocrail-snapshot/rocrail-14617-Linux-x86_64.tgz -O rocrail.tgz
 sudo mkdir -p /opt/rocrail
@@ -254,5 +252,7 @@ sudo systemctl enable rocrail
 sudo systemctl start rocrail
 
 echo "[20/20] Installation complete!"
-echo "Run the application:"
-echo "cd ~/RocrailVolt && ./start.sh"
+echo "=============================================="
+echo "   Run the application:"
+echo "   cd ~/RocrailVolt && ./start.sh"
+echo "=============================================="
